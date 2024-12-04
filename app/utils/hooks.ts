@@ -9,3 +9,4 @@ export async function requireAuth() {
 
   return session;
 }
+
