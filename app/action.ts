@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/app/utils/db";
+import { formatCurrency } from "@/app/utils/formatCurrenct";
 import { requireAuth } from "@/app/utils/hooks";
 import { emailClient } from "@/app/utils/mailtrap";
 import { invoiceSchema, onboardingSchema } from "@/app/utils/zodSchema";
@@ -79,9 +80,14 @@ export async function createInvoice(prevState: any, formData: FormData) {
   emailClient.send({
     from: sender,
     to: [{ email: "tienthanhcute2k2@gmail.com" }],
-    subject: "New Invoice of your company",
-    text: `Invoice Name: ${invoiceData.invoiceName}`,
-    category: "invoice",
+    template_uuid: "3ed9c4ac-9fad-4a7b-af6a-2fd0466f7449",
+    template_variables: {
+      "clientName": submission.value.clientName,
+      "invoiceNumber": submission.value.invoiceNumber,
+      "dueDate": submission.value.date,
+      "totalAmount": formatCurrency({ amount: submission.value.total, currency: submission.value.currency as any }),
+      "invoiceLink": "Test_InvoiceLink"
+    }
   });
 
   return redirect("/dashboard/invoices");
