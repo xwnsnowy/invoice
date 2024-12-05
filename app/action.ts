@@ -2,6 +2,7 @@
 
 import prisma from "@/app/utils/db";
 import { requireAuth } from "@/app/utils/hooks";
+import { emailClient } from "@/app/utils/mailtrap";
 import { invoiceSchema, onboardingSchema } from "@/app/utils/zodSchema";
 import { parseWithZod } from '@conform-to/zod';
 import { redirect } from "next/navigation";
@@ -69,6 +70,19 @@ export async function createInvoice(prevState: any, formData: FormData) {
   //     fromName: submission.value.fromName,
   //   }
   // });
+
+  const sender = {
+    email: "hello@demomailtrap.com",
+    name: "Mailtrap Test",
+  };
+
+  emailClient.send({
+    from: sender,
+    to: [{ email: "tienthanhcute2k2@gmail.com" }],
+    subject: "New Invoice of your company",
+    text: `Invoice Name: ${invoiceData.invoiceName}`,
+    category: "invoice",
+  });
 
   return redirect("/dashboard/invoices");
 }

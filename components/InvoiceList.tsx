@@ -32,7 +32,7 @@ export async function InvoiceList() {
         {data.map((invoice) => (
           <TableRow key={invoice.id}>
             <TableCell className="font-medium">
-              {invoice.invoiceNumber}
+              #{invoice.invoiceNumber}
             </TableCell>
             <TableCell className="font-medium">{invoice.clientName}</TableCell>
             <TableCell className="font-medium">
