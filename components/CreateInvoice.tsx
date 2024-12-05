@@ -54,6 +54,7 @@ export function CreateInvoice() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [rate, setRate] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [currency, setCurrency] = useState("USD");
 
   const calculateTotal = useMemo(
     () => (Number(quantity) || 0) * (Number(rate) || 0),
@@ -69,6 +70,12 @@ export function CreateInvoice() {
             name={fields.date.name}
             key={fields.date.key}
             value={selectedDate.toISOString()}
+          />
+          <input
+            type="hidden"
+            name={fields.total.name}
+            key={fields.total.key}
+            value={calculateTotal}
           />
           <div className="flex flex-col gap-1 w-fit mb-6">
             <div className="flex items-center gap-1">
@@ -106,11 +113,12 @@ export function CreateInvoice() {
               <Label>Currency</Label>
               <Select
                 defaultValue="USD"
-                name="fields.currency.name"
-                key="fields.currency.key"
+                name={fields.currency.name}
+                key={fields.currency.key}
+                onValueChange={(value) => setCurrency(value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a currency" />
+                  <SelectValue placeholder="Select Currency" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="USD">
@@ -119,7 +127,7 @@ export function CreateInvoice() {
                   <SelectItem value="EUR">Euro -- EUR</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-sm text-red-500">{fields.currency.errors}</p>
+              <p className="text-red-500 text-sm">{fields.currency.errors}</p>
             </div>
           </div>
 
@@ -287,7 +295,10 @@ export function CreateInvoice() {
               </div>
               <div className="col-span-2">
                 <Input
-                  value={formatCurrency(calculateTotal)}
+                  value={formatCurrency({
+                    amount: calculateTotal,
+                    currency: currency as "USD" | "EUR",
+                  })}
                   type="text"
                   placeholder="0"
                   disabled
@@ -300,12 +311,22 @@ export function CreateInvoice() {
             <div className="w-1/3">
               <div className="flex justify-between py-2">
                 <span>Subtotal</span>
-                <span>{formatCurrency(calculateTotal)}</span>
+                <span>
+                  {formatCurrency({
+                    amount: calculateTotal,
+                    currency: currency as "USD" | "EUR",
+                  })}
+                </span>
               </div>
               <div className="flex justify-between py-2 border-t">
-                <span>Total (UDS)</span>
+                <span>
+                  Total <span className="font-semibold">({currency})</span>
+                </span>
                 <span className="underline underline-offset-2">
-                  {formatCurrency(calculateTotal)}
+                  {formatCurrency({
+                    amount: calculateTotal,
+                    currency: currency as "USD" | "EUR",
+                  })}
                 </span>
               </div>
             </div>
