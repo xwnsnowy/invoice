@@ -8,6 +8,7 @@ import { invoiceSchema, onboardingSchema } from "@/app/utils/zodSchema";
 import { parseWithZod } from '@conform-to/zod';
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { addDays } from "date-fns";
 
 export async function onboardUser(prevState: any, formData: FormData) {
   const session = await requireAuth();
@@ -40,6 +41,8 @@ export async function createInvoice(prevState: any, formData: FormData) {
   if (submission.status !== 'success') {
     return submission.reply();
   }
+
+
 
   const invoiceData: InvoiceData = submission.value;
 
@@ -77,6 +80,11 @@ export async function createInvoice(prevState: any, formData: FormData) {
     name: "Mailtrap Test",
   };
 
+  const invoiceDate = new Date(submission.value.date);
+  const dueDays = submission.value.dueDate;
+
+  const dueDate = addDays(invoiceDate, dueDays);
+
   emailClient.send({
     from: sender,
     to: [{ email: "tienthanhcute2k2@gmail.com" }],
@@ -85,8 +93,8 @@ export async function createInvoice(prevState: any, formData: FormData) {
       "clientName": submission.value.clientName,
       "invoiceNumber": submission.value.invoiceNumber,
       "dueDate": new Intl.DateTimeFormat("en-US", {
-        dateStyle: "long",      
-      }).format(submission.value.dueDate),
+        dateStyle: "long",
+      }).format(dueDate),
       "totalAmount": formatCurrency({ amount: submission.value.total, currency: submission.value.currency as any }),
       "invoiceLink": "Test_InvoiceLink"
     }
