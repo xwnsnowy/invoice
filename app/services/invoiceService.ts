@@ -1,4 +1,5 @@
 import prisma from "@/app/utils/db";
+import { notFound } from "next/navigation";
 
 export async function getUserInvoices(userId: string) {
   const data = await prisma.invoice.findMany({
@@ -18,6 +19,22 @@ export async function getUserInvoices(userId: string) {
       createdAt: "desc",
     },
   });
+
+  return data;
+}
+
+export async function getInvoiceByUser(invoiceId: string, userId: string) {
+  const data = await prisma.invoice.findUnique({
+    where: {
+      id: invoiceId,
+      userId: userId,
+    },
+
+  });
+
+  if (!data) {
+    return notFound();
+  }
 
   return data;
 }

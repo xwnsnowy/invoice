@@ -77,7 +77,7 @@ export async function createInvoice(prevState: any, formData: FormData) {
 
   const sender = {
     email: "hello@demomailtrap.com",
-    name: "Mailtrap Test",
+    name: "Tien Thanh Cute",
   };
 
   const invoiceDate = new Date(submission.value.date);
@@ -103,3 +103,70 @@ export async function createInvoice(prevState: any, formData: FormData) {
   return redirect("/dashboard/invoices");
 }
 
+export async function editInvoice(prevState: any, formData: FormData) {
+  const session = await requireAuth();
+
+  const submission = parseWithZod(formData, {
+    schema: invoiceSchema,
+  });
+
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
+
+  const invoiceDate = new Date(submission.value.date);
+  const dueDays = submission.value.dueDate;
+
+  const dueDate = addDays(invoiceDate, dueDays);
+
+  const data = await prisma.invoice.update({
+    where: {
+      id: formData.get("id") as string,
+      userId: session.user?.id,
+    },
+    data: {
+      clientAddress: submission.value.clientAddress,
+      clientEmail: submission.value.clientEmail,
+      clientName: submission.value.clientName,
+      currency: submission.value.currency,
+      date: submission.value.date,
+      dueDate: submission.value.dueDate,
+      fromAddress: submission.value.fromAddress,
+      fromEmail: submission.value.fromEmail,
+      fromName: submission.value.fromName,
+      invoiceItemDescrption: submission.value.invoiceItemDescrption,
+      invoiceItemQuantity: submission.value.invoiceItemQuantity,
+      invoiceItemRate: submission.value.invoiceItemRate,
+      invoiceName: submission.value.invoiceName,
+      invoiceNumber: submission.value.invoiceNumber,
+      status: submission.value.status,
+      total: submission.value.total,
+      note: submission.value.note,
+    },
+  });
+
+  const sender = {
+    email: "hello@demomailtrap.com",
+    name: "Tien Thanh Cute",
+  };
+
+  emailClient.send({
+    from: sender,
+    to: [{ email: "tienthanhcute2k2@gmail.com" }],
+    template_uuid: "3ed9c4ac-9fad-4a7b-af6a-2fd0466f7449",
+    template_variables: {
+      "clientName": submission.value.clientName,
+      "invoiceNumber": submission.value.invoiceNumber,
+      "dueDate": new Intl.DateTimeFormat("en-US", {
+        dateStyle: "long",
+      }).format(dueDate),
+      "totalAmount": formatCurrency({ amount: submission.value.total, currency: submission.value.currency as any }),
+      invoiceLink:
+        process.env.NODE_ENV !== "production"
+          ? `http://localhost:3000/api/invoice/${data.id}`
+          : `https://invoice-app-ten.vercel.app/api/invoice/${data.id}`,
+    },
+  });
+
+  return redirect("/dashboard/invoices");
+}
