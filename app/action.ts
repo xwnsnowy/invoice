@@ -153,7 +153,7 @@ export async function editInvoice(prevState: any, formData: FormData) {
   emailClient.send({
     from: sender,
     to: [{ email: "tienthanhcute2k2@gmail.com" }],
-    template_uuid: "3ed9c4ac-9fad-4a7b-af6a-2fd0466f7449",
+    template_uuid: "0013ebdf-b0dd-4133-a009-22e8b664a630",
     template_variables: {
       "clientName": submission.value.clientName,
       "invoiceNumber": submission.value.invoiceNumber,
@@ -161,7 +161,7 @@ export async function editInvoice(prevState: any, formData: FormData) {
         dateStyle: "long",
       }).format(dueDate),
       "totalAmount": formatCurrency({ amount: submission.value.total, currency: submission.value.currency as any }),
-      invoiceLink:
+      "invoiceLink":
         process.env.NODE_ENV !== "production"
           ? `http://localhost:3000/api/invoice/${data.id}`
           : `https://invoice-app-ten.vercel.app/api/invoice/${data.id}`,

@@ -32,6 +32,7 @@ interface EditInvoiceProps {
 
 export function EditInvoice({ data }: EditInvoiceProps) {
   const [lastResult, action] = useActionState(editInvoice, undefined);
+
   const [form, fields] = useForm({
     lastResult,
 
@@ -105,7 +106,7 @@ export function EditInvoice({ data }: EditInvoiceProps) {
             <div>
               <Label>Currency</Label>
               <Select
-                defaultValue="USD"
+                defaultValue={data.currency}
                 name={fields.currency.name}
                 key={fields.currency.key}
                 onValueChange={(value) => setCurrency(value)}
