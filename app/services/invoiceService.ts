@@ -1,5 +1,5 @@
 import prisma from "@/app/utils/db";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function getUserInvoices(userId: string) {
   const data = await prisma.invoice.findMany({
@@ -37,4 +37,17 @@ export async function getInvoiceByUser(invoiceId: string, userId: string) {
   }
 
   return data;
+}
+
+export async function authorizeInvoice(invoiceId: string, userId: string) {
+  const data = await prisma.invoice.findUnique({
+    where: {
+      id: invoiceId,
+      userId: userId,
+    },
+  });
+
+  if (!data) {
+    return redirect("/dashboard/invoices");
+  }
 }

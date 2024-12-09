@@ -6,13 +6,27 @@ import { Loader2 } from "lucide-react";
 
 interface SubmitButtonProps {
   text: string;
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
+    | null
+    | undefined;
 }
 
-export function SubmitButton({ text }: SubmitButtonProps) {
+export function SubmitButton({ text, variant }: SubmitButtonProps) {
   const { pending } = useFormStatus();
 
   return (
-    <Button disabled={pending} className="w-full" type="submit">
+    <Button
+      disabled={pending}
+      className="w-full"
+      type="submit"
+      variant={variant}
+    >
       {pending ? (
         <>
           <Loader2 className="size-4 mr-2 animate-spin" />

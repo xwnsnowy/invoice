@@ -80,7 +80,10 @@ export function InvoiceActions({ id }: InvoiceActionsProps) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="" className="flex items-center p-2">
+          <Link
+            href={`/dashboard/invoices/${id}/paid`}
+            className="flex items-center p-2"
+          >
             <CheckCircle className="size-4 mr-3" />
             <span className="text-sm">Mark as Paid</span>
           </Link>
