@@ -1,4 +1,5 @@
 import { requireAuth } from "@/app/utils/hooks";
+import { DashboardBlocks } from "@/components/DashboardBlocks";
 import { signOut } from "next-auth/react";
 
 export default async function DashboardRoute() {
@@ -6,7 +7,7 @@ export default async function DashboardRoute() {
 
   return (
     <div>
-      <h1>Dashboard</h1>
+      <DashboardBlocks />
       <form
         action={async () => {
           "use server";

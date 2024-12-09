@@ -51,3 +51,52 @@ export async function authorizeInvoice(invoiceId: string, userId: string) {
     return redirect("/dashboard/invoices");
   }
 }
+
+export async function getInvoicesData(userId: string) {
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const [data, pendingInvoices, paidInvoices] = await Promise.all([
+    prisma.invoice.findMany({
+      where: {
+        userId: userId,
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      },
+      select: {
+        total: true,
+      },
+    }),
+    prisma.invoice.findMany({
+      where: {
+        userId: userId,
+        status: "PENDING",
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      },
+      select: {
+        id: true,
+      },
+    }),
+    prisma.invoice.findMany({
+      where: {
+        userId: userId,
+        status: "PAID",
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      },
+      select: {
+        id: true,
+      },
+    }),
+  ]);
+
+  return {
+    data,
+    pendingInvoices,
+    paidInvoices,
+  };
+}
