@@ -145,3 +145,24 @@ export async function getUserInvoicesByDate(userId: string) {
 
   return transformedData;
 }
+
+export async function getRecentUserInvoices(userId: string) {
+  const data = await prisma.invoice.findMany({
+    where: {
+      userId: userId,
+    },
+    select: {
+      id: true,
+      clientName: true,
+      clientEmail: true,
+      total: true,
+      currency: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 7,
+  })
+
+  return data;
+}

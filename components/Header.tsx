@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { DashboardLinks } from "@/components/DashboardLinks";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, User2 } from "lucide-react";
 import {
@@ -23,6 +29,9 @@ const Header = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left">
+          <SheetHeader>
+            <SheetTitle className="hidden">InvoiceXwnsnowy</SheetTitle>
+          </SheetHeader>
           <nav className="grid gap-2 mt-10">
             <DashboardLinks />
           </nav>

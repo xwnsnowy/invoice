@@ -16,7 +16,7 @@ export async function InvoiceGraph() {
   // console.log(data);
 
   return (
-    <Card className="lg:col-span-2 mt-8">
+    <Card className="lg:col-span-2">
       <CardHeader>
         <CardTitle>Paid Invoices</CardTitle>
         <CardDescription>

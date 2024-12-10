@@ -1,5 +1,6 @@
 import { getInvoicesData } from "@/app/services/invoiceService";
 import prisma from "@/app/utils/db";
+import { formatCurrency } from "@/app/utils/formatCurrenct";
 import { requireAuth } from "@/app/utils/hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, CreditCard, DollarSign, Users } from "lucide-react";
@@ -10,7 +11,7 @@ export async function DashboardBlocks() {
     session.user?.id as string
   );
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-8 mb-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-sm">Total Revenue</CardTitle>
@@ -19,7 +20,10 @@ export async function DashboardBlocks() {
         <CardContent>
           <h2 className="text-2xl font-bold">
             {/* array.reduce(callback(accumulator, currentValue), initialValue) */}
-            {data.reduce((acc, invoice) => acc + invoice.total, 0)}
+            {formatCurrency({
+              amount: data.reduce((a, b) => a + b.total, 0),
+              currency: "USD",
+            })}
           </h2>
           <p className="text-xs text-muted-foreground">
             Based on the last 30 days
@@ -60,7 +64,7 @@ export async function DashboardBlocks() {
         <CardContent>
           <h2 className="text-2xl font-bold">+{pendingInvoices.length}</h2>
           <p className="text-xs text-muted-foreground">
-            Invoices which have not been paid
+            Invoices which are currently pending
           </p>
         </CardContent>
       </Card>
