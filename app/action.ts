@@ -32,6 +32,7 @@ export async function onboardUser(prevState: any, formData: FormData) {
 
   return redirect("/dashboard");
 }
+
 export type InvoiceData = z.infer<typeof invoiceSchema>;
 export async function createInvoice(prevState: any, formData: FormData) {
   const session = await requireAuth();
@@ -41,8 +42,6 @@ export async function createInvoice(prevState: any, formData: FormData) {
   if (submission.status !== 'success') {
     return submission.reply();
   }
-
-
 
   const invoiceData: InvoiceData = submission.value;
 

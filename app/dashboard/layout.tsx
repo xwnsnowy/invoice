@@ -8,8 +8,14 @@ import { Toaster } from "@/components/ui/sonner";
 
 async function getUser(userId: string) {
   const data = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { firstName: true, lastName: true, address: true },
+    where: {
+      id: userId,
+    },
+    select: {
+      firstName: true,
+      lastName: true,
+      address: true,
+    },
   });
 
   if (!data?.firstName || !data.lastName || !data.address) {
